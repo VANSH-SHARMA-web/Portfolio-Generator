@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import ModernTemplate from './PortfolioTemplates/Modern';
 import GlassTemplate from './PortfolioTemplates/Glass';
+import MinimalTemplate from './PortfolioTemplates/Minimal';
+import TerminalTemplate from './PortfolioTemplates/TerminalTheme';
+import CreativeTemplate from './PortfolioTemplates/Creative';
 import TemplateSelector from './TemplateSelector';
 import DeployModal from './DeployModal';
 import { Download, Rocket, FileCode2, Code } from 'lucide-react';
@@ -61,8 +64,11 @@ export default function Preview({ data, currentTheme, setCurrentTheme }) {
       </div>
 
       <div className="pt-24 lg:pt-0 min-h-full">
-        {currentTheme === 'modern' && <ModernTemplate data={data} />}
-        {currentTheme === 'glass' && <GlassTemplate data={data} />}
+        {currentTheme === 'modern'   && <ModernTemplate   data={data} />}
+        {currentTheme === 'glass'    && <GlassTemplate    data={data} />}
+        {currentTheme === 'minimal'  && <MinimalTemplate  data={data} />}
+        {currentTheme === 'terminal' && <TerminalTemplate data={data} />}
+        {currentTheme === 'creative' && <CreativeTemplate data={data} />}
       </div>
 
       <DeployModal 
