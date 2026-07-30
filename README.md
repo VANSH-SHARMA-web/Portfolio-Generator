@@ -1,8 +1,12 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/VANSH-SHARMA-web/Portfolio-Generator/main/client/public/logo.svg" alt="PortGen Logo" width="220" />
+  <img src="https://raw.githubusercontent.com/VANSH-SHARMA-web/Portfolio-Generator/main/client/public/logo.png" alt="PortGen Logo" width="280" />
   <br />
   <p>
     <strong>A highly customizable, developer-focused portfolio generator and instant deployment engine built with React and TailwindCSS.</strong>
+  </p>
+
+  <p>
+    <a href="https://portgen.gitignored.workers.dev/" target="_blank"><img src="https://img.shields.io/badge/Live_Demo-portgen.gitignored.workers.dev-cyan?style=for-the-badge&logo=cloudflare" alt="Live Demo" /></a>
   </p>
 
   <p>
