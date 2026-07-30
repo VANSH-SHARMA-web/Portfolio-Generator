@@ -23,7 +23,7 @@ function App() {
       {/* ── Navbar ── */}
       <nav className="w-full px-6 py-4 flex items-center justify-between border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-3 flex-1">
-          <img src="/logo.svg" alt="PortGen" className="h-8 md:h-10 w-auto object-contain drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="PortGen" className="h-8 md:h-10 w-auto object-contain drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
         </div>
 
         {/* Creator badge — centre */}
@@ -69,7 +69,7 @@ function App() {
           {/* Left: Branding */}
           <div className="md:flex-1 flex flex-col items-center md:items-start gap-1">
             <div className="flex items-center gap-2">
-              <img src="/logo.svg" alt="PortGen" className="h-6 w-auto object-contain" />
+              <img src={`${import.meta.env.BASE_URL}logo.png`} alt="PortGen" className="h-6 w-auto object-contain" />
             </div>
             <p className="text-slate-500 text-xs">
               Build stunning developer portfolios in seconds.

@@ -3,7 +3,7 @@ export default {
     const url = new URL(request.url);
 
     // Intercept API calls to generate the bio using Groq
-    if (url.pathname === '/api/generate' && request.method === 'POST') {
+    if (url.pathname.endsWith('/api/generate') && request.method === 'POST') {
       try {
         const body = await request.json();
         const { name, role, skills, projects } = body;

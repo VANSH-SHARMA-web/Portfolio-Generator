@@ -168,7 +168,8 @@ Requirements:
           text = chatCompletion.choices[0]?.message?.content?.trim() || '';
         } else {
           // Call the serverless proxy endpoint
-          const response = await fetch('/api/generate', {
+          const apiPath = `${import.meta.env.BASE_URL}api/generate`.replace(/\/+/g, '/');
+          const response = await fetch(apiPath, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

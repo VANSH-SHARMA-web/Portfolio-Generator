@@ -4,5 +4,8 @@
   "compatibility_date": "2026-04-18",
   "assets": {
     "directory": "client/dist"
-  }
+  },
+  "routes": [
+    { "pattern": "worksonmymachine.indevs.in/portgen*", "zone_name": "indevs.in" }
+  ]
 }
