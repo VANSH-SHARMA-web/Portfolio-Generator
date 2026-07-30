@@ -76,7 +76,7 @@ portfolio-generator/
 │   │   └── main.jsx            # Entry point
 │   ├── package.json
 │   └── vite.config.js
-└── server/                     # Future backend routes (Phase 4 placeholder)
+└── server/                     
 ```
 
 ---
