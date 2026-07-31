@@ -131,6 +131,113 @@ function getOGTags(data) {
   `;
 }
 
+function getVisitorCounterSnippet(data) {
+  if (data.showVisitorCounter === false) return '';
+  const pageId = (data.name || 'portfolio').replace(/[^a-zA-Z0-9_-]/g, '_').toLowerCase();
+  return `
+    <div style="display:flex;justify-content:center;margin-top:16px;">
+      <div style="display:inline-flex;align-items:center;gap:8px;padding:6px 14px;background:rgba(15,23,42,0.85);border:1px solid rgba(51,65,85,0.8);border-radius:9999px;color:#94a3b8;font-size:12px;font-family:sans-serif;">
+        <span style="width:8px;height:8px;border-radius:50%;background:#22d3ee;display:inline-block;"></span>
+        <span>Page Visitors:</span>
+        <strong id="portgen-visitor-count" style="color:#fff;font-family:monospace;">...</strong>
+      </div>
+    </div>
+    <script>
+      (function(){
+        const key = 'pv_${pageId}';
+        let count = parseInt(localStorage.getItem(key) || '100');
+        if (!sessionStorage.getItem('pv_sess_${pageId}')) {
+          count += 1;
+          localStorage.setItem(key, count);
+          sessionStorage.setItem('pv_sess_${pageId}', '1');
+        }
+        const el = document.getElementById('portgen-visitor-count');
+        if (el) el.innerText = count.toLocaleString();
+        fetch('https://api.counterapi.dev/v1/portgen_${pageId}/visits/up')
+          .then(r => r.json())
+          .then(d => { if(d && d.count && el) el.innerText = (d.count + count).toLocaleString(); })
+          .catch(() => {});
+      })();
+    <\/script>
+  `;
+}
+
+function getAiAssistantSnippet(data) {
+  if (data.showAiAssistant === false) return '';
+  const name = escapeHTML(data.name || 'Developer');
+  const role = escapeHTML(data.role || 'Software Engineer');
+  const about = escapeHTML(data.about || '');
+  const skills = (data.skills || []).filter(Boolean).join(', ');
+  const projects = (data.projects || []).map(p => p.title).filter(Boolean).join(', ');
+  const email = escapeHTML(data.email || '');
+
+  return `
+    <div id="portgen-ai-chat" style="position:fixed;bottom:20px;right:20px;z-index:9999;font-family:sans-serif;">
+      <button id="portgen-ai-btn" onclick="togglePortGenAiChat()" style="display:flex;align-items:center;gap:8px;padding:12px 18px;background:linear-gradient(to right, #06b6d4, #3b82f6);color:#fff;font-weight:bold;font-size:13px;border-radius:9999px;border:none;box-shadow:0 0 20px rgba(6,182,212,0.4);cursor:pointer;">
+        <span>✨ Chat with AI Assistant</span>
+      </button>
+      <div id="portgen-ai-box" style="display:none;width:320px;height:420px;background:#0f172a;border:1px solid #1e293b;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.8);flex-direction:column;overflow:hidden;">
+        <div style="padding:12px;background:#1e293b;color:#fff;font-size:13px;font-weight:bold;display:flex;justify-content:space-between;align-items:center;">
+          <span>🤖 ${name}'s AI Assistant</span>
+          <button onclick="togglePortGenAiChat()" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px;">✕</button>
+        </div>
+        <div id="portgen-ai-msgs" style="flex:1;padding:12px;overflow-y:auto;font-size:12px;color:#cbd5e1;line-height:1.5;">
+          <div style="background:#1e293b;padding:8px 12px;border-radius:10px;margin-bottom:8px;max-width:90%;">
+            Hi! I am ${name}'s AI representative. Ask me anything about ${name}'s skills, projects, or background!
+          </div>
+        </div>
+        <div style="padding:8px;background:#0f172a;border-top:1px solid #1e293b;display:flex;gap:6px;">
+          <input id="portgen-ai-in" type="text" placeholder="Ask a question..." onkeydown="if(event.key==='Enter')sendPortGenAiMsg()" style="flex:1;background:#1e293b;border:1px solid #334155;border-radius:8px;padding:6px 10px;color:#fff;font-size:12px;outline:none;" />
+          <button onclick="sendPortGenAiMsg()" style="background:#06b6d4;color:#0f172a;font-weight:bold;border:none;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:12px;">Send</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      function togglePortGenAiChat() {
+        const box = document.getElementById('portgen-ai-box');
+        const btn = document.getElementById('portgen-ai-btn');
+        if (box.style.display === 'none') {
+          box.style.display = 'flex';
+          btn.style.display = 'none';
+        } else {
+          box.style.display = 'none';
+          btn.style.display = 'flex';
+        }
+      }
+      function sendPortGenAiMsg() {
+        const input = document.getElementById('portgen-ai-in');
+        const msgs = document.getElementById('portgen-ai-msgs');
+        const text = input.value.trim();
+        if (!text) return;
+        const uDiv = document.createElement('div');
+        uDiv.style.cssText = 'background:#2563eb;color:#fff;padding:8px 12px;border-radius:10px;margin-bottom:8px;max-width:90%;margin-left:auto;';
+        uDiv.innerText = text;
+        msgs.appendChild(uDiv);
+        input.value = '';
+        msgs.scrollTop = msgs.scrollHeight;
+
+        setTimeout(() => {
+          const aDiv = document.createElement('div');
+          aDiv.style.cssText = 'background:#1e293b;color:#cbd5e1;padding:8px 12px;border-radius:10px;margin-bottom:8px;max-width:90%;';
+          const q = text.toLowerCase();
+          if (q.includes('skill') || q.includes('stack')) {
+            aDiv.innerText = "${name}'s key skills include: ${skills || 'Full stack development'}.";
+          } else if (q.includes('project') || q.includes('work')) {
+            aDiv.innerText = "${name} has worked on projects such as: ${projects || 'Web applications'}.";
+          } else if (q.includes('contact') || q.includes('email')) {
+            aDiv.innerText = "You can reach out to ${name} via email at ${email || 'their portfolio contact options'}.";
+          } else {
+            aDiv.innerText = "${name} is a ${role}. ${about.substring(0, 120)}...";
+          }
+          msgs.appendChild(aDiv);
+          msgs.scrollTop = msgs.scrollHeight;
+        }, 350);
+      }
+    <\/script>
+  `;
+}
+
+
 function generateModernHtml(data) {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -212,6 +319,7 @@ function generateModernHtml(data) {
 
         <footer class="pt-12 pb-8 border-t border-white/10 text-center text-slate-500 text-xs font-semibold uppercase tracking-widest flex flex-col items-center gap-2 font-mono">
           <p>Epic Generated by PortGen.</p>
+          ${getVisitorCounterSnippet(data)}
         </footer>
       </div>
     </div>
@@ -269,6 +377,7 @@ function generateModernHtml(data) {
       }
       animate();
     </script>
+    ${getAiAssistantSnippet(data)}
 </body>
 </html>`;
 }
@@ -346,9 +455,11 @@ function generateGlassHtml(data) {
         
         <footer class="pt-12 pb-8 border-t border-white/10 text-center text-white/40 text-sm">
           <p>Designed with PortGen.</p>
+          ${getVisitorCounterSnippet(data)}
         </footer>
       </div>
     </div>
+    ${getAiAssistantSnippet(data)}
 </body>
 </html>`;
 }
@@ -416,9 +527,11 @@ function generateNeoBrutalistHtml(data) {
         
         <footer class="pt-16 pb-8 text-center font-bold uppercase tracking-widest border-t-4 border-black">
           <p>Generated with PortGen</p>
+          ${getVisitorCounterSnippet(data)}
         </footer>
       </div>
     </div>
+    ${getAiAssistantSnippet(data)}
 </body>
 </html>`;
 }
@@ -513,8 +626,10 @@ function generateClaymorphicHtml(data) {
 
         <footer class="pt-8 text-center text-slate-400 text-xs font-bold tracking-wider">
           <p>BUBBLE GENERATED WITH PORTGEN</p>
+          ${getVisitorCounterSnippet(data)}
         </footer>
     </div>
+    ${getAiAssistantSnippet(data)}
 </body>
 </html>`;
 }
@@ -615,8 +730,10 @@ function generateNordicForestHtml(data) {
 
         <footer class="pt-12 border-t border-[#1b302a]/40 text-center text-[#597066] text-xs font-mono">
           <p>nordic design / generated by portgen</p>
+          ${getVisitorCounterSnippet(data)}
         </footer>
     </div>
+    ${getAiAssistantSnippet(data)}
 </body>
 </html>`;
 }
@@ -678,8 +795,10 @@ function generateMinimalHtml(data) {
 
         <footer class="pt-12 text-center text-xs text-gray-400 tracking-widest uppercase border-t border-gray-100">
           Built with PortGen
+          ${getVisitorCounterSnippet(data)}
         </footer>
     </div>
+    ${getAiAssistantSnippet(data)}
 </body>
 </html>`;
 }
@@ -749,12 +868,16 @@ function generateTerminalHtml(data) {
         </section>
         ` : ''}
 
-        <footer class="pt-8 border-t border-green-500/10 text-xs terminal-dark flex items-center gap-2">
-          <span>Built with</span>
-          <span class="terminal-green font-bold">PortGen</span>
-          <span class="w-1.5 h-3.5 bg-green-500 animate-pulse inline-block"></span>
+        <footer class="pt-8 border-t border-green-500/10 text-xs terminal-dark flex flex-col items-center gap-2">
+          <div class="flex items-center gap-2">
+            <span>Built with</span>
+            <span class="terminal-green font-bold">PortGen</span>
+            <span class="w-1.5 h-3.5 bg-green-500 animate-pulse inline-block"></span>
+          </div>
+          ${getVisitorCounterSnippet(data)}
         </footer>
     </div>
+    ${getAiAssistantSnippet(data)}
 </body>
 </html>`;
 }
@@ -823,8 +946,10 @@ function generateCreativeHtml(data) {
 
         <footer class="pt-12 text-center text-xs font-bold tracking-widest uppercase border-t-2 border-slate-900">
           Built with <span class="text-pink-500">PortGen</span>
+          ${getVisitorCounterSnippet(data)}
         </footer>
     </div>
+    ${getAiAssistantSnippet(data)}
 </body>
 </html>`;
 }

@@ -1,6 +1,7 @@
 import { Plus, Trash2 } from 'lucide-react';
 import GithubImporter from './GithubImporter';
 import AiBioGenerator from './AiBioGenerator';
+import ReadinessScorecard from './ReadinessScorecard';
 
 export default function Form({ data, setData }) {
   const handleChange = (e) => {
@@ -56,7 +57,10 @@ export default function Form({ data, setData }) {
   };
 
   return (
-    <div className="p-6 lg:p-10 max-w-2xl mx-auto w-full space-y-12">
+    <div className="p-6 lg:p-10 max-w-2xl mx-auto w-full space-y-10">
+      {/* Portfolio Readiness Scorecard & Feature Toggles */}
+      <ReadinessScorecard data={data} setData={setData} />
+
       <Section title="Personal Information">
         <Input label="Full Name" name="name" value={data.name} onChange={handleChange} placeholder="John Doe" />
         <Input label="Role / Title" name="role" value={data.role} onChange={handleChange} placeholder="Full Stack Developer" />
@@ -160,7 +164,7 @@ export default function Form({ data, setData }) {
         <GithubImporter data={data} setData={setData} />
 
         <div className="space-y-6 mt-6">
-          {data.projects.map((project, index) => (
+          {data.projects.map((project) => (
             <div key={project.id} className="p-5 border border-slate-700 bg-slate-800/20 rounded-xl space-y-4 relative group">
               <button
                 onClick={() => handleProjectRemove(project.id)}

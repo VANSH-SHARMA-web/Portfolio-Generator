@@ -1,6 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Generate from './pages/Generate';
+import VisitorCounter from './components/VisitorCounter';
+import AiAgentWidget from './components/AiAgentWidget';
 
 const GithubIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
@@ -19,25 +21,29 @@ const LinkedinIcon = () => (
 
 function App() {
   return (
-    <div className="min-h-screen bg-slate-900 text-white font-sans selection:bg-cyan-500/30 flex flex-col">
+    <div className="min-h-screen bg-slate-900 text-white font-sans selection:bg-cyan-500/30 flex flex-col relative">
       {/* ── Navbar ── */}
       <nav className="w-full px-6 py-4 flex items-center justify-between border-b border-slate-800 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
         <div className="flex items-center gap-3 flex-1">
           <img src={`${import.meta.env.BASE_URL}logo.png`} alt="PortGen" className="h-8 md:h-10 w-auto object-contain drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
         </div>
 
-        {/* Creator badge — centre */}
-        <div className="hidden sm:flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/60 border border-slate-700/50 text-xs text-slate-400 font-medium whitespace-nowrap">
-          <span>Made by</span>
-          <a
-            href="https://github.com/vansharmaweb"
-            target="_blank"
-            rel="noreferrer"
-            className="text-cyan-400 hover:text-cyan-300 transition-colors font-semibold"
-          >
-            Vansh Sharma
-          </a>
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+        {/* Visitor counter & Creator badge — center */}
+        <div className="hidden sm:flex items-center justify-center gap-3">
+          <VisitorCounter theme="glass" pageId="portgen_app" label="Total Visits" />
+
+          <div className="flex items-center justify-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/60 border border-slate-700/50 text-xs text-slate-400 font-medium whitespace-nowrap">
+            <span>Made by</span>
+            <a
+              href="https://github.com/vansharmaweb"
+              target="_blank"
+              rel="noreferrer"
+              className="text-cyan-400 hover:text-cyan-300 transition-colors font-semibold"
+            >
+              Vansh Sharma
+            </a>
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          </div>
         </div>
 
         {/* GitHub link — right */}
@@ -62,18 +68,22 @@ function App() {
         </Routes>
       </main>
 
+      {/* Global AI Assistant Agent Floating Widget */}
+      <AiAgentWidget />
+
       {/* ── Footer ── */}
       <footer className="w-full border-t border-slate-800 bg-slate-900/80 backdrop-blur-md px-6 py-8">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
 
-          {/* Left: Branding */}
-          <div className="md:flex-1 flex flex-col items-center md:items-start gap-1">
+          {/* Left: Branding & Visitor Badge */}
+          <div className="md:flex-1 flex flex-col items-center md:items-start gap-2">
             <div className="flex items-center gap-2">
               <img src={`${import.meta.env.BASE_URL}logo.png`} alt="PortGen" className="h-6 w-auto object-contain" />
             </div>
             <p className="text-slate-500 text-xs">
               Build stunning developer portfolios in seconds.
             </p>
+            <VisitorCounter theme="compact" pageId="portgen_app" label="Site Visitors" />
           </div>
 
           {/* Centre: Made by */}
